@@ -76,6 +76,15 @@ func (g *group) WriteFile(path string) error {
 	return nil
 }
 
+func (g *group) AppendFile(path string) error {
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_RDWR, 0644)
+	if err != nil {
+		return fmt.Errorf("create file %s: %s", path, err)
+	}
+	g.render(file)
+	return nil
+}
+
 func (g *group) String() string {
 	buf := pool.Get()
 	defer buf.Free()
