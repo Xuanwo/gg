@@ -8,6 +8,8 @@ type istruct struct {
 }
 
 func (d *istruct) render(w io.Writer) {
+	writeStringF(w, "type %s struct", d.name)
+	d.items.render(w)
 }
 
 func Struct(name string) *istruct {
@@ -17,11 +19,19 @@ func Struct(name string) *istruct {
 	}
 }
 
-func (i *istruct) Comment(content string) *istruct {
-	return nil
+func (i *istruct) Line() *istruct {
+	i.items.append(Line())
+	return i
 }
+
+func (i *istruct) Comment(content string) *istruct {
+	i.items.append(Comment(content))
+	return i
+}
+
 func (i *istruct) CommentF(format string, args ...interface{}) *istruct {
-	return nil
+	i.items.append(CommentF(format, args...))
+	return i
 }
 
 func (i *istruct) Field(name, typ string) *istruct {

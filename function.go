@@ -27,7 +27,11 @@ func Function(name string) *ifunction {
 }
 
 func (f *ifunction) render(w io.Writer) {
-	f.comments.render(w)
+	if f.comments.length() != 0 {
+		f.comments.render(w)
+		// We always need to insert a new line for function comments
+		writeString(w, "\n")
+	}
 
 	writeString(w, "func ")
 
