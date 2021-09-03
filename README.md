@@ -80,9 +80,7 @@ f.Function("hello").
     Parameter("content", "string").
     Parameter("times", "int").
 	Result("v", "string").
-	Body(
-		gg.String(`return fmt.Sprintf("say %s in %d times", content, times)`),
-    )
+	Body(gg.String(`return fmt.Sprintf("say %s in %d times", content, times)`))
 // func (v *World) hello(content string, times int) (v string) {
 //  return fmt.Sprintf("say %s in %d times", content, times)
 //}
