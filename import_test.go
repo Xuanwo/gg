@@ -1,37 +1,26 @@
-package codegen
+package gg
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestImport_String(t *testing.T) {
-	cases := []struct {
-		name   string
-		path   string
-		alias  string
-		expect string
-	}{
-		{
-			"normal", "math", "",
-			` "math"`,
-		},
-		{
-			"dot import", "math", ImportDot,
-			`. "math"`,
-		},
-		{
-			"black import", "math", ImportBlank,
-			`_ "math"`,
-		},
-	}
+func TestImports(t *testing.T) {
+	buf := pool.Get()
+	defer buf.Free()
 
-	for _, v := range cases {
-		t.Run(v.name, func(t *testing.T) {
-			i := newImport(v.path, v.alias)
+	expected := `import (
+"context"
+. "time"
+_ "math"
+test "testing"
+)
+`
+	Imports().
+		Path("context").
+		Dot("time").
+		Blank("math").
+		Alias("testing", "test").
+		render(buf)
 
-			assert.Equal(t, v.expect, i.String())
-		})
-	}
+	compareAST(t, expected, buf.String())
 }

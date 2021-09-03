@@ -1,7 +1,14 @@
-package codegen
+package gg
 
-import "strings"
+import (
+	"strings"
 
+	"github.com/Xuanwo/go-bufferpool"
+)
+
+var pool = bufferpool.New(1024)
+
+// TODO: we will support use to config this logic.
 const lineLength = 80
 
 func formatComment(comment string) string {

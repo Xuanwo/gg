@@ -1,31 +1,40 @@
-package codegen
+package gg
 
-import (
-	"github.com/stretchr/testify/assert"
-	"testing"
-)
+import "testing"
 
-func TestFunction_String(t *testing.T) {
-	m := &Function{
-		comment:  "Test function comment",
-		receiver: NewReceiver("t", "TestFunctionReceiver", false),
-		name:     "TestFunctionName",
-		parameters: []*Parameter{
-			NewParameter("p1", "TestFunctionParameter", true),
-			NewParameter("p2", "int64", false),
-		},
-		results: []*Result{
-			NewResult("r1", "TestFunctionResult", true),
-			NewResult("r2", "int64", false),
-		},
-		bodyTmpl: `println("{{.}}")`,
-		bodyData: "Test Body",
-	}
+func TestFunction(t *testing.T) {
+	t.Run("no receiver", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
 
-	expect := `// Test function comment
-func (t TestFunctionReceiver)TestFunctionName(p1 *TestFunctionParameter,p2 int64)(r1 *TestFunctionResult,r2 int64) {
-println("Test Body")}
-`
+		expected := `func Test(a int, b string) (d uint) {}`
 
-	assert.Equal(t, expect, m.String())
+		Function("Test").
+			Parameter("a", "int").
+			Parameter("b", "string").
+			Result("d", "uint").
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
+
+	t.Run("has receiver", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `func (r *Q) Test() (a int, b int64, d string) {
+return "Hello, World!"
+}`
+		Function("Test").
+			Receiver("r", "*Q").
+			Result("a", "int").
+			Result("b", "int64").
+			Result("d", "string").
+			Body(
+				String(`return "Hello, World!"`),
+			).
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
 }

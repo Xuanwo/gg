@@ -1,192 +1,90 @@
-package codegen
+package gg
 
-import (
-	"fmt"
-	"text/template"
-)
+import "io"
 
-type Function struct {
-	comment    string
-	receiver   *Receiver
+type ifunction struct {
+	comments   *group
 	name       string
-	parameters []*Parameter
-	results    []*Result
-	bodyTmpl   string
-	bodyData   interface{}
+	receiver   Node
+	parameters *group
+	results    *group
+	body       *group
 }
 
-func NewFunction(name string) *Function {
-	return &Function{
-		receiver: nil,
-		name:     name,
+func Function(name string) *ifunction {
+	return &ifunction{
+		name:       name,
+		comments:   newGroup("", "", "\n"),
+		parameters: newGroup("(", ")", ","),
+		results:    newGroup("(", ")", ","),
+		body:       newGroup("{\n", "}", "\n"),
 	}
 }
 
-func NewMethod(r *Receiver, name string) *Function {
-	return &Function{
-		receiver: r,
-		name:     name,
-	}
-}
+func (f *ifunction) render(w io.Writer) {
+	f.comments.render(w)
 
-func (f *Function) WithComment(comment string) *Function {
-	f.comment = comment
-	return f
-}
+	writeString(w, "func ")
 
-func (f *Function) WithParameters(ps ...*Parameter) *Function {
-	f.parameters = ps
-	return f
-}
-
-func (f *Function) WithResults(rs ...*Result) *Function {
-	f.results = rs
-	return f
-}
-
-func (f *Function) WithBody(tmpl string, data interface{}) *Function {
-	f.bodyTmpl = tmpl
-	f.bodyData = data
-	return f
-}
-
-// String will generate the function into.
-//
-// func (r *Receiver) FunctionName(p Parameter) (r Result) { body }
-func (f *Function) String() string {
-	buf := pool.Get()
-	defer buf.Free()
-
-	if len(f.comment) > 0 {
-		buf.AppendString(formatComment(f.comment))
-	}
-
-	buf.AppendString("func ")
-	// Generate receiver is we have one.
+	// Render receiver
 	if f.receiver != nil {
-		buf.AppendString("(")
-		buf.AppendString(f.receiver.String())
-		buf.AppendString(")")
+		writeString(w, "(")
+		f.receiver.render(w)
+		writeString(w, ")")
 	}
-	buf.AppendString(f.name)
 
-	// Generate method parameters
-	buf.AppendString("(")
-	// FIXME: we need to support rewrite `x int, y int` into `x, y int`.
-	isFirst := true
-	for _, v := range f.parameters {
-		if !isFirst {
-			buf.AppendString(",")
-		}
-		buf.AppendString(v.String())
-		isFirst = false
-	}
-	buf.AppendString(")")
+	// Render function name
+	writeString(w, f.name)
 
-	// Generate method results
-	buf.AppendString("(")
-	// FIXME: we need to support rewrite `x int, y int` into `x, y int`.
-	isFirst = true
-	for _, v := range f.results {
-		if !isFirst {
-			buf.AppendString(",")
-		}
-		buf.AppendString(v.String())
-		isFirst = false
-	}
-	buf.AppendString(")")
-	// Generate method body.
-	buf.AppendString(" {\n")
-	tmpl, err := template.New(f.name).Parse(f.bodyTmpl)
-	if err != nil {
-		panic(fmt.Errorf("parse template: %w", err))
-	}
-	err = tmpl.Execute(buf, f.bodyData)
-	if err != nil {
-		panic(fmt.Errorf("execute template: %w", err))
-	}
-	buf.AppendString("}\n")
+	// Render parameters
+	f.parameters.render(w)
 
-	return buf.String()
+	// Render results
+	// FIXME: we always render `()` here, maybe we can remove it if only one result here.
+	f.results.render(w)
+
+	// Render body
+	f.body.render(w)
 }
 
-type Receiver struct {
-	name      string
-	ty        string
-	isPointer bool
+func (f *ifunction) Comment(content string) *ifunction {
+	f.comments.append(Comment(content))
+	return f
 }
 
-func NewReceiver(name, ty string, isPointer bool) *Receiver {
-	return &Receiver{
+func (f *ifunction) CommentF(content string, args ...interface{}) *ifunction {
+	f.comments.append(CommentF(content, args...))
+	return f
+}
+
+func (f *ifunction) Receiver(name, typ string) *ifunction {
+	f.receiver = &ifield{
 		name:      name,
-		ty:        ty,
-		isPointer: isPointer,
+		value:     typ,
+		separator: " ",
 	}
+	return f
 }
 
-func (r *Receiver) String() string {
-	buf := pool.Get()
-	defer buf.Free()
-
-	buf.AppendString(r.name)
-	buf.AppendString(" ")
-	if r.isPointer {
-		buf.AppendString(" *")
-	}
-	buf.AppendString(r.ty)
-	return buf.String()
-}
-
-type Parameter struct {
-	name      string
-	ty        string
-	isPointer bool
-}
-
-func NewParameter(name, ty string, isPointer bool) *Parameter {
-	return &Parameter{
+func (f *ifunction) Parameter(name, typ string) *ifunction {
+	f.parameters.append(&ifield{
 		name:      name,
-		ty:        ty,
-		isPointer: isPointer,
-	}
+		value:     typ,
+		separator: " ",
+	})
+	return f
 }
 
-func (r *Parameter) String() string {
-	buf := pool.Get()
-	defer buf.Free()
-
-	buf.AppendString(r.name)
-	buf.AppendString(" ")
-	if r.isPointer {
-		buf.AppendString("*")
-	}
-	buf.AppendString(r.ty)
-	return buf.String()
-}
-
-type Result struct {
-	name      string
-	ty        string
-	isPointer bool
-}
-
-func NewResult(name, ty string, isPointer bool) *Result {
-	return &Result{
+func (f *ifunction) Result(name, typ string) *ifunction {
+	f.results.append(&ifield{
 		name:      name,
-		ty:        ty,
-		isPointer: isPointer,
-	}
+		value:     typ,
+		separator: " ",
+	})
+	return f
 }
 
-func (r *Result) String() string {
-	buf := pool.Get()
-	defer buf.Free()
-
-	buf.AppendString(r.name)
-	buf.AppendString(" ")
-	if r.isPointer {
-		buf.AppendString("*")
-	}
-	buf.AppendString(r.ty)
-	return buf.String()
+func (f *ifunction) Body(node ...Node) *ifunction {
+	f.body.append(node...)
+	return f
 }

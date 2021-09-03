@@ -1,4 +1,4 @@
-module github.com/Xuanwo/go-codegen
+module github.com/Xuanwo/gg
 
 go 1.15
 

@@ -1,4 +1,4 @@
-package codegen
+package gg
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -13,8 +13,8 @@ func TestFormatComment(t *testing.T) {
 	}{
 		{
 			"short line",
-			"Struct comment",
-			"// Struct comment\n",
+			"Value comment",
+			"// Value comment\n",
 		},
 		{
 			"long single line",

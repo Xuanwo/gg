@@ -2,21 +2,22 @@ package gg
 
 import "io"
 
-type iconst struct {
+type ivar struct {
 	items *group
 }
 
-func Const() *iconst {
-	return &iconst{
+func Var() *ivar {
+	return &ivar{
 		items: newGroup("(", ")", "\n"),
 	}
 }
-func (i *iconst) render(w io.Writer) {
-	writeString(w, "const ")
+
+func (i *ivar) render(w io.Writer) {
+	writeString(w, "var ")
 	i.items.render(w)
 }
 
-func (i *iconst) Field(name, value string) *iconst {
+func (i *ivar) Field(name, value string) *ivar {
 	i.items.append(&ifield{
 		name:      name,
 		value:     value,

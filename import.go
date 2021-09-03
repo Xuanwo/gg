@@ -1,72 +1,40 @@
-package codegen
+package gg
 
-import (
-	"fmt"
-)
+import "io"
 
-const (
-	ImportDot   = "."
-	ImportBlank = "_"
-)
-
-type Import struct {
-	path  string
-	alias string
+type iimport struct {
+	items *group
 }
 
-func newImport(path, alias string) *Import {
-	return &Import{
-		path:  path,
-		alias: alias,
+func Imports() *iimport {
+	return &iimport{
+		items: newGroup("(", ")", "\n"),
 	}
 }
 
-func NewImport(path string) *Import {
-	return newImport(path, "")
+func (i *iimport) render(w io.Writer) {
+	writeString(w, "import ")
+	i.items.render(w)
 }
 
-func NewDotImport(path string) *Import {
-	return newImport(path, ImportDot)
+func (i *iimport) Path(name string) *iimport {
+	i.items.append(Lit(name))
+	return i
+}
+func (i *iimport) Dot(name string) *iimport {
+	i.items.append(StringF(`. "%s"`, name))
+	return i
+}
+func (i *iimport) Blank(name string) *iimport {
+	i.items.append(StringF(`_ "%s"`, name))
+	return i
+}
+func (i *iimport) Alias(name, alias string) *iimport {
+	i.items.append(StringF(`%s "%s"`, alias, name))
+	return i
 }
 
-func NewBlankImport(path string) *Import {
-	return newImport(path, ImportBlank)
-}
-
-func (i *Import) String() string {
-	return fmt.Sprintf(`%s "%s"`, i.alias, i.path)
-}
-
-type ImportGroup struct {
-	ims []*Import
-}
-
-func NewImportGroup() *ImportGroup {
-	return &ImportGroup{}
-}
-
-func (is *ImportGroup) Add(ims ...*Import) *ImportGroup {
-	is.ims = append(is.ims, ims...)
-	return is
-}
-
-// TODO: we need to add test for this.
-func (is *ImportGroup) String() string {
-	switch len(is.ims) {
-	case 0:
-		return ""
-	case 1:
-		return fmt.Sprintf("import %s", is.ims[0])
-	default:
-		buf := pool.Get()
-		defer buf.Free()
-
-		buf.AppendString("import (\n")
-		for _, v := range is.ims {
-			buf.AppendString(v.String())
-			buf.AppendString("\n")
-		}
-		buf.AppendString(")\n")
-		return buf.String()
-	}
+func (i *iimport) Line() *iimport {
+	i.items.append(Line())
+	return i
 }
