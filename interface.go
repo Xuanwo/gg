@@ -103,3 +103,9 @@ func (i *iinterface) LineComment(content string, args ...interface{}) *iinterfac
 	i.items.append(LineComment(content, args...))
 	return i
 }
+
+// LineComment will insert a new line comment.
+func (i *iinterface) Line() *iinterface {
+	i.items.append(Line())
+	return i
+}
