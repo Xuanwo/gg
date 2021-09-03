@@ -49,7 +49,7 @@ func (g *group) render(w io.Writer) {
 	}
 }
 
-func (g *group) WriteTo(w io.Writer) {
+func (g *group) Write(w io.Writer) {
 	g.render(w)
 }
 
