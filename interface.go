@@ -83,7 +83,7 @@ type iinterface struct {
 func Interface(name string) *iinterface {
 	return &iinterface{
 		name:  name,
-		items: newGroup("{", "}", "\n"),
+		items: newGroup("{\n", "}", "\n"),
 	}
 }
 
