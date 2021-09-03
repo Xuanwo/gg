@@ -128,3 +128,9 @@ func (g *group) Struct(name string) *istruct {
 	g.append(i)
 	return i
 }
+
+func (g *group) Interface(name string) *iinterface {
+	i := Interface(name)
+	g.append(i)
+	return i
+}
