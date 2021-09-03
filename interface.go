@@ -97,3 +97,9 @@ func (i *iinterface) Function(name string) *isignature {
 	i.items.append(sig)
 	return sig
 }
+
+// LineComment will insert a new line comment.
+func (i *iinterface) LineComment(content string, args ...interface{}) *iinterface {
+	i.items.append(LineComment(content, args...))
+	return i
+}
