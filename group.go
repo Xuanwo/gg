@@ -23,6 +23,20 @@ type group struct {
 	open      string
 	close     string
 	separator string
+
+	// If this result is true, we will omit the wrap like `()`, `{}`.
+	omitWrapIf func() bool
+}
+
+func (g *group) length() int {
+	return len(g.items)
+}
+
+func (g *group) shouldOmitWrap() bool {
+	if g.omitWrapIf == nil {
+		return false
+	}
+	return g.omitWrapIf()
 }
 
 func (g *group) append(node ...Node) *group {
@@ -31,7 +45,7 @@ func (g *group) append(node ...Node) *group {
 }
 
 func (g *group) render(w io.Writer) {
-	if g.open != "" {
+	if g.open != "" && !g.shouldOmitWrap() {
 		writeString(w, g.open)
 	}
 
@@ -44,7 +58,7 @@ func (g *group) render(w io.Writer) {
 		isfirst = false
 	}
 
-	if g.close != "" {
+	if g.close != "" && !g.shouldOmitWrap() {
 		writeString(w, g.close)
 	}
 }
@@ -60,6 +74,14 @@ func (g *group) WriteFile(path string) error {
 	}
 	g.render(file)
 	return nil
+}
+
+func (g *group) String() string {
+	buf := pool.Get()
+	defer buf.Free()
+
+	g.render(buf)
+	return buf.String()
 }
 
 func (g *group) Comment(content string) *group {

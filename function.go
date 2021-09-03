@@ -12,13 +12,18 @@ type ifunction struct {
 }
 
 func Function(name string) *ifunction {
-	return &ifunction{
+	i := &ifunction{
 		name:       name,
 		comments:   newGroup("", "", "\n"),
 		parameters: newGroup("(", ")", ","),
 		results:    newGroup("(", ")", ","),
 		body:       newGroup("{\n", "}", "\n"),
 	}
+	// We should omit the `()` if result is empty
+	i.results.omitWrapIf = func() bool {
+		return i.results.length() == 0
+	}
+	return i
 }
 
 func (f *ifunction) render(w io.Writer) {

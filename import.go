@@ -7,12 +7,20 @@ type iimport struct {
 }
 
 func Imports() *iimport {
-	return &iimport{
+	i := &iimport{
 		items: newGroup("(", ")", "\n"),
 	}
+	i.items.omitWrapIf = func() bool {
+		return i.items.length() <= 1
+	}
+	return i
 }
 
 func (i *iimport) render(w io.Writer) {
+	// Don't need to render anything if import is empty
+	if i.items.length() == 0 {
+		return
+	}
 	writeString(w, "import ")
 	i.items.render(w)
 }
