@@ -84,7 +84,7 @@ func (g *group) String() string {
 	return buf.String()
 }
 
-func (g *group) Comment(content string, args ...interface{}) *group {
+func (g *group) LineComment(content string, args ...interface{}) *group {
 	g.append(LineComment(content, args...))
 	return g
 }
