@@ -13,23 +13,24 @@ var pool = bufferpool.New(1024)
 // TODO: we will support use to config this logic.
 const lineLength = 80
 
+// All internal types are prefixed with `i` to avoid conflict with golang keywords.
 type istring string
 
 func (v *istring) render(w io.Writer) {
 	writeString(w, string(*v))
 }
 
-func String(v string) *istring {
-	x := istring(v)
-	return &x
-}
-
-func StringF(format string, args ...interface{}) *istring {
+// String will add a format string in Group, just like fmt.Printf.
+func String(format string, args ...interface{}) *istring {
+	if len(args) == 0 {
+		x := istring(format)
+		return &x
+	}
 	x := istring(fmt.Sprintf(format, args...))
 	return &x
 }
 
-func formatComment(comment string) string {
+func formatLineComment(comment string) string {
 	buf := pool.Get()
 	defer buf.Free()
 
@@ -65,14 +66,11 @@ func formatComment(comment string) string {
 	return strings.TrimSuffix(buf.String(), "\n")
 }
 
-func Comment(content string) *istring {
-	content = formatComment(content)
-	return String(content)
-}
-
-func CommentF(content string, args ...interface{}) *istring {
-	content = fmt.Sprintf(content, args...)
-	content = formatComment(content)
+func LineComment(content string, args ...interface{}) *istring {
+	if len(args) != 0 {
+		content = fmt.Sprintf(content, args...)
+	}
+	content = formatLineComment(content)
 	return String(content)
 }
 

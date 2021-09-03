@@ -7,7 +7,7 @@ func ExampleGroup() {
 	f.Package("main")
 	f.Imports().Path("fmt")
 	f.Function("main").Body(
-		StringF(`fmt.Println("%s")`, "Hello, World!"),
+		String(`fmt.Println("%s")`, "Hello, World!"),
 	)
 	fmt.Println(f.String())
 	// Output:

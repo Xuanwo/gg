@@ -11,6 +11,10 @@ type ifunction struct {
 	body       *group
 }
 
+// Function represent both method and function in Go.
+//
+// If receiver is nil, we will generate like a pure function.
+// Or, we will generate a method.
 func Function(name string) *ifunction {
 	i := &ifunction{
 		name:       name,
@@ -21,14 +25,22 @@ func Function(name string) *ifunction {
 	}
 	// We should omit the `()` if result is empty
 	i.results.omitWrapIf = func() bool {
-		return i.results.length() == 0
+		l := i.results.length()
+		if l == 0 {
+			// There is no result fields, we can omit `()` safely.
+			return true
+		}
+		// NOTE: We also need to omit `()` while there is only one field,
+		//  and the field name is empty, like `test() (int64) => test() int64`.
+		//  But it's hard to implement in render side, so we let `go fmt` to do the job.
+		return false
 	}
 	return i
 }
 
-func (f *ifunction) render(w io.Writer) {
-	if f.comments.length() != 0 {
-		f.comments.render(w)
+func (i *ifunction) render(w io.Writer) {
+	if i.comments.length() != 0 {
+		i.comments.render(w)
 		// We always need to insert a new line for function comments
 		writeString(w, "\n")
 	}
@@ -36,64 +48,66 @@ func (f *ifunction) render(w io.Writer) {
 	writeString(w, "func ")
 
 	// Render receiver
-	if f.receiver != nil {
+	if i.receiver != nil {
 		writeString(w, "(")
-		f.receiver.render(w)
+		i.receiver.render(w)
 		writeString(w, ")")
 	}
 
 	// Render function name
-	writeString(w, f.name)
+	writeString(w, i.name)
 
 	// Render parameters
-	f.parameters.render(w)
+	i.parameters.render(w)
 
 	// Render results
-	// FIXME: we always render `()` here, maybe we can remove it if only one result here.
-	f.results.render(w)
+	i.results.render(w)
 
 	// Render body
-	f.body.render(w)
+	i.body.render(w)
 }
 
-func (f *ifunction) Comment(content string) *ifunction {
-	f.comments.append(Comment(content))
-	return f
+// LineComment will insert a new line comment.
+func (i *ifunction) LineComment(content string, args ...interface{}) *ifunction {
+	i.comments.append(LineComment(content, args...))
+	return i
 }
 
-func (f *ifunction) CommentF(content string, args ...interface{}) *ifunction {
-	f.comments.append(CommentF(content, args...))
-	return f
+// NamedLineComment will insert a new line comment starts with function name.
+func (i *ifunction) NamedLineComment(content string, args ...interface{}) *ifunction {
+	content = i.name + " " + content
+	i.comments.append(LineComment(content, args...))
+	return i
 }
 
-func (f *ifunction) Receiver(name, typ string) *ifunction {
-	f.receiver = &ifield{
+func (i *ifunction) Receiver(name, typ string) *ifunction {
+	i.receiver = &ifield{
 		name:      name,
 		value:     typ,
 		separator: " ",
 	}
-	return f
+	return i
 }
 
-func (f *ifunction) Parameter(name, typ string) *ifunction {
-	f.parameters.append(&ifield{
+func (i *ifunction) Parameter(name, typ string) *ifunction {
+	i.parameters.append(&ifield{
 		name:      name,
 		value:     typ,
 		separator: " ",
 	})
-	return f
+	return i
 }
 
-func (f *ifunction) Result(name, typ string) *ifunction {
-	f.results.append(&ifield{
+func (i *ifunction) Result(name, typ string) *ifunction {
+	i.results.append(&ifield{
 		name:      name,
 		value:     typ,
 		separator: " ",
 	})
-	return f
+	return i
 }
 
-func (f *ifunction) Body(node ...Node) *ifunction {
-	f.body.append(node...)
-	return f
+func (i *ifunction) Body(node ...Node) *ifunction {
+	i.body.append(node...)
+	return i
 }

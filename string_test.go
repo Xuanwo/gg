@@ -7,47 +7,49 @@ import (
 )
 
 func TestString(t *testing.T) {
-	buf := pool.Get()
-	defer buf.Free()
+	t.Run("simple string", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
 
-	expected := "Hello, World!"
+		expected := "Hello, World!"
 
-	String(expected).render(buf)
+		String(expected).render(buf)
 
-	assert.Equal(t, expected, buf.String())
+		assert.Equal(t, expected, buf.String())
+	})
+	t.Run("format string", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := "Hello, World!"
+
+		String("Hello, %s!", "World").render(buf)
+
+		assert.Equal(t, expected, buf.String())
+	})
 }
 
-func TestStringF(t *testing.T) {
-	buf := pool.Get()
-	defer buf.Free()
+func TestLineComment(t *testing.T) {
+	t.Run("simple comment", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
 
-	expected := "Hello, World!"
+		expected := "// Hello, World!"
 
-	StringF("Hello, %s!", "World").render(buf)
+		LineComment("Hello, World!").render(buf)
 
-	assert.Equal(t, expected, buf.String())
-}
+		assert.Equal(t, expected, buf.String())
+	})
+	t.Run("format comment", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
 
-func TestComment(t *testing.T) {
-	buf := pool.Get()
-	defer buf.Free()
+		expected := "// Hello, World!"
 
-	expected := "// Hello, World!"
+		LineComment("Hello, %s!", "World").render(buf)
 
-	Comment("Hello, World!").render(buf)
-
-	assert.Equal(t, expected, buf.String())
-}
-
-func TestCommentF(t *testing.T) {
-	buf := pool.Get()
-	defer buf.Free()
-
-	expected := "// Hello, World!"
-
-	CommentF("Hello, %s!", "World").render(buf)
-
-	assert.Equal(t, expected, buf.String())
+		assert.Equal(t, expected, buf.String())
+	})
 }
 
 func TestLit(t *testing.T) {
@@ -89,7 +91,7 @@ its own line break.`,
 
 	for _, v := range cases {
 		t.Run(v.name, func(t *testing.T) {
-			assert.Equal(t, v.expect, formatComment(v.input))
+			assert.Equal(t, v.expect, formatLineComment(v.input))
 		})
 	}
 }
