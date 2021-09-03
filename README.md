@@ -8,7 +8,7 @@ package main
 import (
 	"fmt"
 	
-	"github.com/Xuanwo/gg"
+	. "github.com/Xuanwo/gg"
 )
 
 func main() {
