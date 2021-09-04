@@ -26,13 +26,6 @@ func (i *istruct) Line() *istruct {
 	return i
 }
 
-// NamedLineComment will insert a new line comment started with struct name.
-func (i *istruct) NamedLineComment(content string, args ...interface{}) *istruct {
-	content = i.name + " " + content
-	i.items.append(LineComment(content, args...))
-	return i
-}
-
 // LineComment will insert a new line comment.
 func (i *istruct) LineComment(content string, args ...interface{}) *istruct {
 	i.items.append(LineComment(content, args...))
