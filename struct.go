@@ -10,8 +10,10 @@ type istruct struct {
 // Struct will insert a new struct.
 func Struct(name string) *istruct {
 	return &istruct{
-		name:  name,
-		items: newGroup("{", "}", "\n"),
+		name: name,
+		// We will insert new line before closing the struct to avoid being affect
+		// by line comments.
+		items: newGroup("{", "\n}", "\n"),
 	}
 }
 
