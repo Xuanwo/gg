@@ -9,6 +9,7 @@ type ifunction struct {
 	parameters *group
 	results    *group
 	body       *group
+	call       *icall
 }
 
 // Function represent both method and function in Go.
@@ -65,6 +66,11 @@ func (i *ifunction) render(w io.Writer) {
 
 	// Render body
 	i.body.render(w)
+
+	if i.call != nil {
+		// Render call
+		i.call.render(w)
+	}
 }
 
 // LineComment will insert a new line comment.
@@ -98,4 +104,9 @@ func (i *ifunction) Result(name, typ interface{}) *ifunction {
 func (i *ifunction) Body(node ...interface{}) *ifunction {
 	i.body.append(parseNodes(node)...)
 	return i
+}
+
+func (i *ifunction) Call() *icall {
+	i.call = Call("")
+	return i.call
 }

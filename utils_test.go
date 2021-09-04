@@ -23,5 +23,5 @@ func compareAST(t *testing.T, a, b string) {
 	}
 	t.Error("AST is not the same.")
 	t.Errorf("left:\n%s\ncleaned:\n%s", a, na)
-	t.Errorf("right:\n%s\bcleaned:\n%s", b, nb)
+	t.Errorf("right:\n%s\ncleaned:\n%s", b, nb)
 }

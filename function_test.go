@@ -57,4 +57,17 @@ return "Hello, World!"
 
 		compareAST(t, expected, buf.String())
 	})
+
+	t.Run("call", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `func(){}()`
+
+		fn := Function("")
+		fn.Call()
+		fn.render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
 }
