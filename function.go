@@ -80,30 +80,18 @@ func (i *ifunction) NamedLineComment(content string, args ...interface{}) *ifunc
 	return i
 }
 
-func (i *ifunction) Receiver(name, typ string) *ifunction {
-	i.receiver = &ifield{
-		name:      name,
-		value:     typ,
-		separator: " ",
-	}
+func (i *ifunction) Receiver(name, typ interface{}) *ifunction {
+	i.receiver = field(name, typ, " ")
 	return i
 }
 
-func (i *ifunction) Parameter(name, typ string) *ifunction {
-	i.parameters.append(&ifield{
-		name:      name,
-		value:     typ,
-		separator: " ",
-	})
+func (i *ifunction) Parameter(name, typ interface{}) *ifunction {
+	i.parameters.append(field(name, typ, " "))
 	return i
 }
 
-func (i *ifunction) Result(name, typ string) *ifunction {
-	i.results.append(&ifield{
-		name:      name,
-		value:     typ,
-		separator: " ",
-	})
+func (i *ifunction) Result(name, typ interface{}) *ifunction {
+	i.results.append(field(name, typ, " "))
 	return i
 }
 

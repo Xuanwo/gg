@@ -57,21 +57,13 @@ func (i *isignature) NamedLineComment(content string, args ...interface{}) *isig
 	return i
 }
 
-func (i *isignature) Parameter(name, typ string) *isignature {
-	i.parameters.append(&ifield{
-		name:      name,
-		value:     typ,
-		separator: " ",
-	})
+func (i *isignature) Parameter(name, typ interface{}) *isignature {
+	i.parameters.append(field(name, typ, " "))
 	return i
 }
 
-func (i *isignature) Result(name, typ string) *isignature {
-	i.results.append(&ifield{
-		name:      name,
-		value:     typ,
-		separator: " ",
-	})
+func (i *isignature) Result(name, typ interface{}) *isignature {
+	i.results.append(field(name, typ, " "))
 	return i
 }
 
@@ -104,7 +96,7 @@ func (i *iinterface) LineComment(content string, args ...interface{}) *iinterfac
 	return i
 }
 
-// LineComment will insert a new line comment.
+// Line will insert a new line.
 func (i *iinterface) Line() *iinterface {
 	i.items.append(Line())
 	return i

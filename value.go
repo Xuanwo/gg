@@ -20,11 +20,15 @@ func (v *ivalue) render(w io.Writer) {
 	v.items.render(w)
 }
 
-func (v *ivalue) Field(name string, value string) *ivalue {
-	v.items.append(&ifield{
-		name:      name,
-		value:     value,
-		separator: ":",
-	})
+func (v *ivalue) String() string {
+	buf := pool.Get()
+	defer buf.Free()
+
+	v.render(buf)
+	return buf.String()
+}
+
+func (v *ivalue) Field(name, value interface{}) *ivalue {
+	v.items.append(field(name, value, ":"))
 	return v
 }

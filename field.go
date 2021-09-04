@@ -1,6 +1,9 @@
 package gg
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 // ifield is used to represent a key-value pair.
 //
@@ -12,11 +15,32 @@ import "io"
 // - function result
 // - ...
 type ifield struct {
-	name      string
-	value     string
+	name      Node
+	value     Node
 	separator string
 }
 
+func field(name, value interface{}, sep string) *ifield {
+	return &ifield{
+		name:      parseNode(name),
+		value:     parseNode(value),
+		separator: sep,
+	}
+}
+
 func (f *ifield) render(w io.Writer) {
-	writeString(w, f.name, f.separator, f.value)
+	f.name.render(w)
+	writeString(w, f.separator)
+	f.value.render(w)
+}
+
+func parseNode(in interface{}) Node {
+	switch v := in.(type) {
+	case Node:
+		return v
+	case string:
+		return String(v)
+	default:
+		panic(fmt.Errorf("invalid input: %s", v))
+	}
 }

@@ -7,9 +7,15 @@ type ivar struct {
 }
 
 func Var() *ivar {
-	return &ivar{
+	i := &ivar{
 		items: newGroup("(", ")", "\n"),
 	}
+	i.items.omitWrapIf = func() bool {
+		// We only need to omit wrap while length == 1.
+		// If length == 0, we need to keep it, or it will be invalid expr.
+		return i.items.length() == 1
+	}
+	return i
 }
 
 func (i *ivar) render(w io.Writer) {
@@ -17,11 +23,7 @@ func (i *ivar) render(w io.Writer) {
 	i.items.render(w)
 }
 
-func (i *ivar) Field(name, value string) *ivar {
-	i.items.append(&ifield{
-		name:      name,
-		value:     value,
-		separator: "=",
-	})
+func (i *ivar) Field(name, value interface{}) *ivar {
+	i.items.append(field(name, value, "="))
 	return i
 }

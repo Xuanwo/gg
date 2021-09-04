@@ -39,11 +39,7 @@ func (i *istruct) LineComment(content string, args ...interface{}) *istruct {
 	return i
 }
 
-func (i *istruct) Field(name, typ string) *istruct {
-	i.items.append(&ifield{
-		name:      name,
-		value:     typ,
-		separator: " ",
-	})
+func (i *istruct) Field(name, typ interface{}) *istruct {
+	i.items.append(field(name, typ, " "))
 	return nil
 }
