@@ -20,6 +20,9 @@ func (v *istring) render(w io.Writer) {
 	writeString(w, string(*v))
 }
 
+// S is an alias to String.
+var S = String
+
 // String will add a format string in Group, just like fmt.Printf.
 func String(format string, args ...interface{}) *istring {
 	if len(args) == 0 {
