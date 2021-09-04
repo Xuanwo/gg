@@ -77,12 +77,14 @@ type iswitch struct {
 func (i *iswitch) render(w io.Writer) {
 	writeString(w, "switch ")
 	i.judge.render(w)
-	writeString(w, "{")
+	writeString(w, "{\n")
 	for _, c := range i.cases {
 		c.render(w)
+		writeString(w, "\n")
 	}
 	if i.defaultCase != nil {
 		i.defaultCase.render(w)
+		writeString(w, "\n")
 	}
 	writeString(w, "}")
 }
