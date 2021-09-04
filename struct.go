@@ -34,5 +34,5 @@ func (i *istruct) LineComment(content string, args ...interface{}) *istruct {
 
 func (i *istruct) Field(name, typ interface{}) *istruct {
 	i.items.append(field(name, typ, " "))
-	return nil
+	return i
 }
