@@ -1,7 +1,6 @@
 package gg
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -16,7 +15,20 @@ func TestConst(t *testing.T) {
 			Field("Version", Lit(2)).
 			render(buf)
 
-		assert.Equal(t, expected, buf.String())
+		compareAST(t, expected, buf.String())
+	})
+
+	t.Run("typed", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := "const Version int =2"
+
+		Const().
+			TypedField("Version", "int", Lit(2)).
+			render(buf)
+
+		compareAST(t, expected, buf.String())
 	})
 
 	t.Run("multiple", func(t *testing.T) {

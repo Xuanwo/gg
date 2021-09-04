@@ -2,8 +2,6 @@ package gg
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestVar(t *testing.T) {
@@ -17,7 +15,20 @@ func TestVar(t *testing.T) {
 			Field("Version", Lit(2)).
 			render(buf)
 
-		assert.Equal(t, expected, buf.String())
+		compareAST(t, expected, buf.String())
+	})
+
+	t.Run("typed", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := "var Version int =2"
+
+		Var().
+			TypedField("Version", "int", Lit(2)).
+			render(buf)
+
+		compareAST(t, expected, buf.String())
 	})
 
 	t.Run("multiple", func(t *testing.T) {

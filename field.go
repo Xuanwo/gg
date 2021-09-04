@@ -16,6 +16,7 @@ import (
 // - ...
 type ifield struct {
 	name      Node
+	typ       Node
 	value     Node
 	separator string
 }
@@ -28,8 +29,21 @@ func field(name, value interface{}, sep string) *ifield {
 	}
 }
 
+func typedField(name, typ, value interface{}, sep string) *ifield {
+	return &ifield{
+		name:      parseNode(name),
+		typ:       parseNode(typ),
+		value:     parseNode(value),
+		separator: sep,
+	}
+}
+
 func (f *ifield) render(w io.Writer) {
 	f.name.render(w)
+	if f.typ != nil {
+		writeString(w, " ")
+		f.typ.render(w)
+	}
 	writeString(w, f.separator)
 	f.value.render(w)
 }

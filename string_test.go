@@ -2,8 +2,6 @@ package gg
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestString(t *testing.T) {
@@ -15,7 +13,7 @@ func TestString(t *testing.T) {
 
 		String(expected).render(buf)
 
-		assert.Equal(t, expected, buf.String())
+		compareAST(t, expected, buf.String())
 	})
 	t.Run("format string", func(t *testing.T) {
 		buf := pool.Get()
@@ -25,7 +23,7 @@ func TestString(t *testing.T) {
 
 		String("Hello, %s!", "World").render(buf)
 
-		assert.Equal(t, expected, buf.String())
+		compareAST(t, expected, buf.String())
 	})
 }
 
@@ -38,7 +36,7 @@ func TestLineComment(t *testing.T) {
 
 		LineComment("Hello, World!").render(buf)
 
-		assert.Equal(t, expected, buf.String())
+		compareAST(t, expected, buf.String())
 	})
 	t.Run("format comment", func(t *testing.T) {
 		buf := pool.Get()
@@ -48,7 +46,7 @@ func TestLineComment(t *testing.T) {
 
 		LineComment("Hello, %s!", "World").render(buf)
 
-		assert.Equal(t, expected, buf.String())
+		compareAST(t, expected, buf.String())
 	})
 }
 
@@ -60,7 +58,7 @@ func TestLit(t *testing.T) {
 
 	Lit(true).render(buf)
 
-	assert.Equal(t, expected, buf.String())
+	compareAST(t, expected, buf.String())
 }
 
 func TestFormatComment(t *testing.T) {
@@ -91,7 +89,7 @@ its own line break.`,
 
 	for _, v := range cases {
 		t.Run(v.name, func(t *testing.T) {
-			assert.Equal(t, v.expect, formatLineComment(v.input))
+			compareAST(t, v.expect, formatLineComment(v.input))
 		})
 	}
 }

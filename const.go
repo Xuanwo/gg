@@ -26,3 +26,7 @@ func (i *iconst) Field(name, value interface{}) *iconst {
 	i.items.append(field(name, value, "="))
 	return i
 }
+func (i *iconst) TypedField(name, typ, value interface{}) *iconst {
+	i.items.append(typedField(name, typ, value, "="))
+	return i
+}
