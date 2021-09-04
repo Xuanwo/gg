@@ -95,7 +95,7 @@ func (i *ifunction) Result(name, typ interface{}) *ifunction {
 	return i
 }
 
-func (i *ifunction) Body(node ...Node) *ifunction {
-	i.body.append(node...)
+func (i *ifunction) Body(node ...interface{}) *ifunction {
+	i.body.append(parseNodes(node)...)
 	return i
 }

@@ -18,21 +18,33 @@ func (i *iif) render(w io.Writer) {
 	i.judge.render(w)
 	i.body.render(w)
 }
-func (i *iif) Body(node ...Node) *iif {
-	i.body.append(node...)
+
+func (i *iif) Body(node ...interface{}) *iif {
+	i.body.append(parseNodes(node)...)
 	return i
 }
 
 type ifor struct {
+	judge Node
+	body  *group
 }
 
-func (v *ifor) render(w io.Writer) {
+func (i *ifor) render(w io.Writer) {
+	writeString(w, "for ")
+	i.judge.render(w)
+	i.body.render(w)
 }
+
 func For(judge Node) *ifor {
-	return nil
+	return &ifor{
+		judge: judge,
+		body:  newGroup("{\n", "\n}", "\n"),
+	}
 }
-func (i *ifor) Body(node ...Node) *ifor {
-	return nil
+
+func (i *ifor) Body(node ...interface{}) *ifor {
+	i.body.append(parseNodes(node)...)
+	return i
 }
 
 type icase struct {
@@ -51,8 +63,8 @@ func (i *icase) render(w io.Writer) {
 	i.body.render(w)
 }
 
-func (i *icase) Body(node ...Node) *icase {
-	i.body.append(node...)
+func (i *icase) Body(node ...interface{}) *icase {
+	i.body.append(parseNodes(node)...)
 	return i
 }
 

@@ -6,11 +6,11 @@ type ireturn struct {
 	items *group
 }
 
-func Return(node ...Node) *ireturn {
+func Return(node ...interface{}) *ireturn {
 	i := &ireturn{
 		items: newGroup("", "", ", "),
 	}
-	i.items.append(node...)
+	i.items.append(parseNodes(node)...)
 	return i
 }
 

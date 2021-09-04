@@ -48,6 +48,14 @@ func (f *ifield) render(w io.Writer) {
 	f.value.render(w)
 }
 
+func parseNodes(in []interface{}) []Node {
+	ns := make([]Node, 0, len(in))
+	for _, v := range in {
+		ns = append(ns, parseNode(v))
+	}
+	return ns
+}
+
 func parseNode(in interface{}) Node {
 	switch v := in.(type) {
 	case Node:
