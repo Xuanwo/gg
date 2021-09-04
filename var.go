@@ -32,3 +32,8 @@ func (i *ivar) TypedField(name, typ, value interface{}) *ivar {
 	i.items.append(typedField(name, typ, value, "="))
 	return i
 }
+
+func (i *ivar) Decl(name, value interface{}) *ivar {
+	i.items.append(field(name, value, " "))
+	return i
+}

@@ -48,4 +48,17 @@ Description="Hello, World!"
 
 		compareAST(t, expected, buf.String())
 	})
+
+	t.Run("decl", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `var _ io.Reader`
+
+		Var().
+			Decl("_", "io.Reader").
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
 }
