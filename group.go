@@ -114,6 +114,24 @@ func (g *group) Line() *group {
 	return g
 }
 
+func (g *group) If(judge Node) *iif {
+	i := If(judge)
+	g.append(i)
+	return i
+}
+
+func (g *group) For(judge Node) *ifor {
+	i := For(judge)
+	g.append(i)
+	return i
+}
+
+func (g *group) Switch(judge Node) *iswitch {
+	i := Switch(judge)
+	g.append(i)
+	return i
+}
+
 func (g *group) Var() *ivar {
 	i := Var()
 	g.append(i)
