@@ -38,7 +38,7 @@ func (i *icall) Owner(name string) *icall {
 }
 
 func (i *icall) Parameter(value interface{}) *icall {
-	i.items.append(parseNode(value))
+	i.items.append(value)
 	return i
 }
 

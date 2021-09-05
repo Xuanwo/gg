@@ -10,7 +10,7 @@ func Return(node ...interface{}) *ireturn {
 	i := &ireturn{
 		items: newGroup("", "", ", "),
 	}
-	i.items.append(parseNodes(node)...)
+	i.items.append(node...)
 	return i
 }
 
