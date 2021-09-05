@@ -3,7 +3,6 @@ package gg
 import "io"
 
 type ifunction struct {
-	comments   *group
 	name       string
 	receiver   Node
 	parameters *group
@@ -19,7 +18,6 @@ type ifunction struct {
 func Function(name string) *ifunction {
 	i := &ifunction{
 		name:       name,
-		comments:   newGroup("", "", "\n"),
 		parameters: newGroup("(", ")", ","),
 		results:    newGroup("(", ")", ","),
 		body:       newGroup("{\n", "}", "\n"),
@@ -40,12 +38,6 @@ func Function(name string) *ifunction {
 }
 
 func (i *ifunction) render(w io.Writer) {
-	if i.comments.length() != 0 {
-		i.comments.render(w)
-		// We always need to insert a new line for function comments
-		writeString(w, "\n")
-	}
-
 	writeString(w, "func ")
 
 	// Render receiver
@@ -73,19 +65,6 @@ func (i *ifunction) render(w io.Writer) {
 	}
 }
 
-// LineComment will insert a new line comment.
-func (i *ifunction) LineComment(content string, args ...interface{}) *ifunction {
-	i.comments.append(LineComment(content, args...))
-	return i
-}
-
-// NamedLineComment will insert a new line comment starts with function name.
-func (i *ifunction) NamedLineComment(content string, args ...interface{}) *ifunction {
-	content = i.name + " " + content
-	i.comments.append(LineComment(content, args...))
-	return i
-}
-
 func (i *ifunction) Receiver(name, typ interface{}) *ifunction {
 	i.receiver = field(name, typ, " ")
 	return i
@@ -102,7 +81,7 @@ func (i *ifunction) Result(name, typ interface{}) *ifunction {
 }
 
 func (i *ifunction) Body(node ...interface{}) *ifunction {
-	i.body.append(parseNodes(node)...)
+	i.body.append(node...)
 	return i
 }
 

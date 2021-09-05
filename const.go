@@ -30,3 +30,8 @@ func (i *iconst) TypedField(name, typ, value interface{}) *iconst {
 	i.items.append(typedField(name, typ, value, "="))
 	return i
 }
+
+func (i *iconst) LineComment(value interface{}) *iconst {
+	i.items.append(value)
+	return i
+}

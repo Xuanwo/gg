@@ -20,7 +20,7 @@ func (i *iif) render(w io.Writer) {
 }
 
 func (i *iif) Body(node ...interface{}) *iif {
-	i.body.append(parseNodes(node)...)
+	i.body.append(node...)
 	return i
 }
 
@@ -43,7 +43,7 @@ func For(judge Node) *ifor {
 }
 
 func (i *ifor) Body(node ...interface{}) *ifor {
-	i.body.append(parseNodes(node)...)
+	i.body.append(node...)
 	return i
 }
 
@@ -64,7 +64,7 @@ func (i *icase) render(w io.Writer) {
 }
 
 func (i *icase) Body(node ...interface{}) *icase {
-	i.body.append(parseNodes(node)...)
+	i.body.append(node...)
 	return i
 }
 

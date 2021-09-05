@@ -21,6 +21,7 @@ func (v *istring) render(w io.Writer) {
 }
 
 // S is an alias to String.
+// TODO: can we find a new name for this?
 var S = String
 
 // String will add a format string in Group, just like fmt.Printf.

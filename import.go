@@ -55,3 +55,9 @@ func (i *iimport) Line() *iimport {
 	i.items.append(Line())
 	return i
 }
+
+// LineComment will insert a new line comment here.
+func (i *iimport) LineComment(content string, args ...interface{}) *iimport {
+	i.items.append(LineComment(content, args...))
+	return i
+}

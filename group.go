@@ -39,8 +39,8 @@ func (g *group) shouldOmitWrap() bool {
 	return g.omitWrapIf()
 }
 
-func (g *group) append(node ...Node) *group {
-	g.items = append(g.items, node...)
+func (g *group) append(node ...interface{}) *group {
+	g.items = append(g.items, parseNodes(node)...)
 	return g
 }
 
