@@ -12,7 +12,7 @@ func TestReturn(t *testing.T) {
 		String("a"),
 		String("b"),
 		Lit(123),
-		Value("Test").Field("Abc", Lit(123)),
+		Value("Test").AddField("Abc", Lit(123)),
 	)
 	ir.render(buf)
 

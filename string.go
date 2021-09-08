@@ -24,7 +24,7 @@ func (v *istring) render(w io.Writer) {
 // TODO: can we find a new name for this?
 var S = String
 
-// String will add a format string in Group, just like fmt.Printf.
+// String will add a format string in NewGroup, just like fmt.Printf.
 func String(format string, args ...interface{}) *istring {
 	if len(args) == 0 {
 		x := istring(format)
@@ -54,7 +54,7 @@ func formatLineComment(comment string) string {
 		words := strings.Split(line, " ")
 
 		for _, word := range words {
-			// If current line is long enough we need to break it.
+			// NewIf current line is long enough we need to break it.
 			if cur >= lineLength {
 				buf.AppendString("\n//")
 				cur = 0
@@ -95,7 +95,7 @@ func (v *lit) render(w io.Writer) {
 		out = fmt.Sprintf("%#v", v.value)
 	case float64:
 		out = fmt.Sprintf("%#v", v.value)
-		// If the formatted ivalue is not in scientific notation, and does not have a dot, then
+		// NewIf the formatted ivalue is not in scientific notation, and does not have a dot, then
 		// we add ".0". Otherwise it will be interpreted as an int.
 		// See:
 		// https://github.com/dave/jennifer/issues/39

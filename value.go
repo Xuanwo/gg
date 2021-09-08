@@ -28,7 +28,7 @@ func (v *ivalue) String() string {
 	return buf.String()
 }
 
-func (v *ivalue) Field(name, value interface{}) *ivalue {
+func (v *ivalue) AddField(name, value interface{}) *ivalue {
 	v.items.append(field(name, value, ":"))
 	return v
 }

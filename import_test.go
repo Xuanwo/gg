@@ -15,11 +15,11 @@ _ "math"
 test "testing"
 )
 `
-	Imports().
-		Path("context").
-		Dot("time").
-		Blank("math").
-		Alias("testing", "test").
+	Import().
+		AddPath("context").
+		AddDot("time").
+		AddBlank("math").
+		AddAlias("testing", "test").
 		render(buf)
 
 	compareAST(t, expected, buf.String())

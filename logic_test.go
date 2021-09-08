@@ -12,7 +12,7 @@ if ok {
 }
 `
 
-	If(String("ok")).Body(String(`println("Hello, World!")`)).
+	If(String("ok")).AddBody(String(`println("Hello, World!")`)).
 		render(buf)
 
 	compareAST(t, expected, buf.String())
@@ -33,9 +33,9 @@ default:
 }
 `
 	is := Switch(String("x"))
-	is.Case(String("1")).Body(String(`print("1")`))
-	is.Case(String("2")).Body(String(`print("2")`))
-	is.Default().Body(String(`print("default")`))
+	is.NewCase(String("1")).AddBody(String(`print("1")`))
+	is.NewCase(String("2")).AddBody(String(`print("2")`))
+	is.NewDefault().AddBody(String(`print("default")`))
 	is.render(buf)
 
 	compareAST(t, expected, buf.String())

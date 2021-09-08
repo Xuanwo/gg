@@ -12,7 +12,7 @@ func TestVar(t *testing.T) {
 		expected := "var Version=2"
 
 		Var().
-			Field("Version", Lit(2)).
+			AddField("Version", Lit(2)).
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -25,7 +25,7 @@ func TestVar(t *testing.T) {
 		expected := "var Version int =2"
 
 		Var().
-			TypedField("Version", "int", Lit(2)).
+			AddTypedField("Version", "int", Lit(2)).
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -42,8 +42,8 @@ Description="Hello, World!"
 `
 
 		Var().
-			Field("Version", Lit(2)).
-			Field("Description", Lit("Hello, World!")).
+			AddField("Version", Lit(2)).
+			AddField("Description", Lit("Hello, World!")).
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -56,7 +56,7 @@ Description="Hello, World!"
 		expected := `var _ io.Reader`
 
 		Var().
-			Decl("_", "io.Reader").
+			AddDecl("_", "io.Reader").
 			render(buf)
 
 		compareAST(t, expected, buf.String())

@@ -24,8 +24,8 @@ b string
 }`
 
 		Struct("Test").
-			Field("A", "int64").
-			Field("b", "string").
+			AddField("A", "int64").
+			AddField("b", "string").
 			render(buf)
 
 		compareAST(t, expected, buf.String())

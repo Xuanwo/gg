@@ -65,27 +65,27 @@ func (i *ifunction) render(w io.Writer) {
 	}
 }
 
-func (i *ifunction) Receiver(name, typ interface{}) *ifunction {
+func (i *ifunction) WithReceiver(name, typ interface{}) *ifunction {
 	i.receiver = field(name, typ, " ")
 	return i
 }
 
-func (i *ifunction) Parameter(name, typ interface{}) *ifunction {
+func (i *ifunction) WithCall(params ...interface{}) *ifunction {
+	i.call = Call("").AddParameter(params...)
+	return i
+}
+
+func (i *ifunction) AddParameter(name, typ interface{}) *ifunction {
 	i.parameters.append(field(name, typ, " "))
 	return i
 }
 
-func (i *ifunction) Result(name, typ interface{}) *ifunction {
+func (i *ifunction) AddResult(name, typ interface{}) *ifunction {
 	i.results.append(field(name, typ, " "))
 	return i
 }
 
-func (i *ifunction) Body(node ...interface{}) *ifunction {
+func (i *ifunction) AddBody(node ...interface{}) *ifunction {
 	i.body.append(node...)
 	return i
-}
-
-func (i *ifunction) Call() *icall {
-	i.call = Call("")
-	return i.call
 }

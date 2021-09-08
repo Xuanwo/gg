@@ -12,11 +12,11 @@ TestB() (err error)
 }
 `
 	in := Interface("Tester")
-	in.Function("TestA").
-		Parameter("a", "int64").
-		Parameter("b", "int")
-	in.Function("TestB").
-		Result("err", "error")
+	in.NewFunction("TestA").
+		AddParameter("a", "int64").
+		AddParameter("b", "int")
+	in.NewFunction("TestB").
+		AddResult("err", "error")
 
 	in.render(buf)
 

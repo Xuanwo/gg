@@ -18,10 +18,11 @@ func TestCalls(t *testing.T) {
 		buf := pool.Get()
 		defer buf.Free()
 
-		expected := "x.List()"
+		expected := "x.List(src)"
 
 		Call("List").
-			Owner("x").
+			WithOwner("x").
+			AddParameter("src").
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -34,10 +35,8 @@ func TestCalls(t *testing.T) {
 		expected := "x.List().Next(src,dst)"
 
 		Call("List").
-			Owner("x").
-			Call("Next").
-			Parameter("src").
-			Parameter("dst").
+			WithOwner("x").
+			AddCall("Next", "src", "dst").
 			render(buf)
 
 		compareAST(t, expected, buf.String())

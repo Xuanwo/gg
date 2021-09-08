@@ -10,9 +10,9 @@ func TestFunction(t *testing.T) {
 		expected := `func Test(a int, b string) (d uint) {}`
 
 		Function("Test").
-			Parameter("a", "int").
-			Parameter("b", "string").
-			Result("d", "uint").
+			AddParameter("a", "int").
+			AddParameter("b", "string").
+			AddResult("d", "uint").
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -26,11 +26,11 @@ func TestFunction(t *testing.T) {
 return "Hello, World!"
 }`
 		Function("Test").
-			Receiver("r", "*Q").
-			Result("a", "int").
-			Result("b", "int64").
-			Result("d", "string").
-			Body(
+			WithReceiver("r", "*Q").
+			AddResult("a", "int").
+			AddResult("b", "int64").
+			AddResult("d", "string").
+			AddBody(
 				String(`return "Hello, World!"`),
 			).
 			render(buf)
@@ -46,11 +46,11 @@ return "Hello, World!"
 return "Hello, World!"
 }`
 		Function("Test").
-			Receiver("r", "*Q").
-			Result("a", String("int")).
-			Result("b", "int64").
-			Result("d", "string").
-			Body(
+			WithReceiver("r", "*Q").
+			AddResult("a", String("int")).
+			AddResult("b", "int64").
+			AddResult("d", "string").
+			AddBody(
 				String(`return "Hello, World!"`),
 			).
 			render(buf)
@@ -65,7 +65,7 @@ return "Hello, World!"
 		expected := `func(){}()`
 
 		fn := Function("")
-		fn.Call()
+		fn.WithCall()
 		fn.render(buf)
 
 		compareAST(t, expected, buf.String())

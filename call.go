@@ -9,6 +9,7 @@ type icall struct {
 	owner Node
 	name  string
 	items *group
+	calls *group
 }
 
 // Call is used to generate a function call.
@@ -16,6 +17,7 @@ func Call(name string) *icall {
 	ic := &icall{
 		name:  name,
 		items: newGroup("(", ")", ","),
+		calls: newGroup("", "", "."),
 	}
 	return ic
 }
@@ -27,9 +29,13 @@ func (i *icall) render(w io.Writer) {
 	}
 	writeString(w, i.name)
 	i.items.render(w)
+	if i.calls.length() != 0 {
+		writeString(w, ".")
+		i.calls.render(w)
+	}
 }
 
-func (i *icall) Owner(name string) *icall {
+func (i *icall) WithOwner(name string) *icall {
 	if i.owner != nil {
 		panic(fmt.Errorf("icall already have owner %v", i.owner))
 	}
@@ -37,15 +43,12 @@ func (i *icall) Owner(name string) *icall {
 	return i
 }
 
-func (i *icall) Parameter(value interface{}) *icall {
-	i.items.append(value)
+func (i *icall) AddParameter(value ...interface{}) *icall {
+	i.items.append(value...)
 	return i
 }
 
-func (i *icall) Call(name string) *icall {
-	ni := Call(name)
-	// We link the current icall to the new icall's owner, so we can
-	// generate the function call list.
-	ni.owner = i
-	return ni
+func (i *icall) AddCall(name string, params ...interface{}) *icall {
+	i.calls.append(Call(name).AddParameter(params...))
+	return i
 }

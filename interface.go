@@ -17,7 +17,7 @@ func signature(name string) *isignature {
 		results:    newGroup("(", ")", ","),
 	}
 	// We should omit the `()` if result is empty
-	// Read about omit in Function comments.
+	// Read about omit in NewFunction comments.
 	i.results.omitWrapIf = func() bool {
 		l := i.results.length()
 		if l == 0 {
@@ -30,11 +30,6 @@ func signature(name string) *isignature {
 }
 
 func (i *isignature) render(w io.Writer) {
-	if i.comments.length() != 0 {
-		i.comments.render(w)
-		// We always need to insert a new line for function comments
-		writeString(w, "\n")
-	}
 	// Render function name
 	writeString(w, i.name)
 
@@ -44,25 +39,12 @@ func (i *isignature) render(w io.Writer) {
 	i.results.render(w)
 }
 
-// LineComment will insert a new line comment.
-func (i *isignature) LineComment(content string, args ...interface{}) *isignature {
-	i.comments.append(LineComment(content, args...))
-	return i
-}
-
-// NamedLineComment will insert a new line comment starts with function name.
-func (i *isignature) NamedLineComment(content string, args ...interface{}) *isignature {
-	content = i.name + " " + content
-	i.comments.append(LineComment(content, args...))
-	return i
-}
-
-func (i *isignature) Parameter(name, typ interface{}) *isignature {
+func (i *isignature) AddParameter(name, typ interface{}) *isignature {
 	i.parameters.append(field(name, typ, " "))
 	return i
 }
 
-func (i *isignature) Result(name, typ interface{}) *isignature {
+func (i *isignature) AddResult(name, typ interface{}) *isignature {
 	i.results.append(field(name, typ, " "))
 	return i
 }
@@ -84,20 +66,20 @@ func (i *iinterface) render(w io.Writer) {
 	i.items.render(w)
 }
 
-func (i *iinterface) Function(name string) *isignature {
+func (i *iinterface) NewFunction(name string) *isignature {
 	sig := signature(name)
 	i.items.append(sig)
 	return sig
 }
 
-// LineComment will insert a new line comment.
-func (i *iinterface) LineComment(content string, args ...interface{}) *iinterface {
+// AddLineComment will insert a new line comment.
+func (i *iinterface) AddLineComment(content string, args ...interface{}) *iinterface {
 	i.items.append(LineComment(content, args...))
 	return i
 }
 
-// Line will insert a new line.
-func (i *iinterface) Line() *iinterface {
+// AddLine will insert a new line.
+func (i *iinterface) AddLine() *iinterface {
 	i.items.append(Line())
 	return i
 }

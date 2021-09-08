@@ -12,7 +12,7 @@ func TestConst(t *testing.T) {
 		expected := "const Version=2"
 
 		Const().
-			Field("Version", Lit(2)).
+			AddField("Version", Lit(2)).
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -25,7 +25,7 @@ func TestConst(t *testing.T) {
 		expected := "const Version int =2"
 
 		Const().
-			TypedField("Version", "int", Lit(2)).
+			AddTypedField("Version", "int", Lit(2)).
 			render(buf)
 
 		compareAST(t, expected, buf.String())
@@ -42,8 +42,8 @@ Description="Hello, World!"
 `
 
 		Const().
-			Field("Version", Lit(2)).
-			Field("Description", Lit("Hello, World!")).
+			AddField("Version", Lit(2)).
+			AddField("Description", Lit("Hello, World!")).
 			render(buf)
 
 		compareAST(t, expected, buf.String())

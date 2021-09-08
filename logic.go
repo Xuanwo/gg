@@ -19,7 +19,7 @@ func (i *iif) render(w io.Writer) {
 	i.body.render(w)
 }
 
-func (i *iif) Body(node ...interface{}) *iif {
+func (i *iif) AddBody(node ...interface{}) *iif {
 	i.body.append(node...)
 	return i
 }
@@ -42,7 +42,7 @@ func For(judge Node) *ifor {
 	}
 }
 
-func (i *ifor) Body(node ...interface{}) *ifor {
+func (i *ifor) AddBody(node ...interface{}) *ifor {
 	i.body.append(node...)
 	return i
 }
@@ -63,7 +63,7 @@ func (i *icase) render(w io.Writer) {
 	i.body.render(w)
 }
 
-func (i *icase) Body(node ...interface{}) *icase {
+func (i *icase) AddBody(node ...interface{}) *icase {
 	i.body.append(node...)
 	return i
 }
@@ -94,7 +94,7 @@ func Switch(judge Node) *iswitch {
 		judge: judge,
 	}
 }
-func (i *iswitch) Case(judge Node) *icase {
+func (i *iswitch) NewCase(judge Node) *icase {
 	ic := &icase{
 		judge: judge,
 		body:  newGroup("\n", "", "\n"),
@@ -103,7 +103,7 @@ func (i *iswitch) Case(judge Node) *icase {
 	return ic
 }
 
-func (i *iswitch) Default() *icase {
+func (i *iswitch) NewDefault() *icase {
 	ic := &icase{
 		body: newGroup("\n", "", "\n"),
 	}

@@ -22,19 +22,19 @@ func (i *istruct) render(w io.Writer) {
 	i.items.render(w)
 }
 
-// Line will insert an empty line.
-func (i *istruct) Line() *istruct {
+// AddLine will insert an empty line.
+func (i *istruct) AddLine() *istruct {
 	i.items.append(Line())
 	return i
 }
 
-// LineComment will insert a new line comment.
-func (i *istruct) LineComment(content string, args ...interface{}) *istruct {
+// AddLineComment will insert a new line comment.
+func (i *istruct) AddLineComment(content string, args ...interface{}) *istruct {
 	i.items.append(LineComment(content, args...))
 	return i
 }
 
-func (i *istruct) Field(name, typ interface{}) *istruct {
+func (i *istruct) AddField(name, typ interface{}) *istruct {
 	i.items.append(field(name, typ, " "))
 	return i
 }

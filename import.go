@@ -6,8 +6,8 @@ type iimport struct {
 	items *group
 }
 
-// Imports will start a new import group.
-func Imports() *iimport {
+// Import will start a new import group.
+func Import() *iimport {
 	i := &iimport{
 		items: newGroup("(", ")", "\n"),
 	}
@@ -26,38 +26,38 @@ func (i *iimport) render(w io.Writer) {
 	i.items.render(w)
 }
 
-// Path will import a new path, like `"context"`
-func (i *iimport) Path(name string) *iimport {
+// AddPath will import a new path, like `"context"`
+func (i *iimport) AddPath(name string) *iimport {
 	i.items.append(Lit(name))
 	return i
 }
 
-// Dot will import a new path with dot, like `. "context"`
-func (i *iimport) Dot(name string) *iimport {
+// AddDot will import a new path with dot, like `. "context"`
+func (i *iimport) AddDot(name string) *iimport {
 	i.items.append(String(`. "%s"`, name))
 	return i
 }
 
-// Blank will import a new path with black, like `_ "context"`
-func (i *iimport) Blank(name string) *iimport {
+// AddBlank will import a new path with black, like `_ "context"`
+func (i *iimport) AddBlank(name string) *iimport {
 	i.items.append(String(`_ "%s"`, name))
 	return i
 }
 
-// Alias will import a new path with alias, like `ctx "context"`
-func (i *iimport) Alias(name, alias string) *iimport {
+// AddAlias will import a new path with alias, like `ctx "context"`
+func (i *iimport) AddAlias(name, alias string) *iimport {
 	i.items.append(String(`%s "%s"`, alias, name))
 	return i
 }
 
-// Line will insert a new line here.
-func (i *iimport) Line() *iimport {
+// AddLine will insert a new line here.
+func (i *iimport) AddLine() *iimport {
 	i.items.append(Line())
 	return i
 }
 
-// LineComment will insert a new line comment here.
-func (i *iimport) LineComment(content string, args ...interface{}) *iimport {
+// AddLineComment will insert a new line comment here.
+func (i *iimport) AddLineComment(content string, args ...interface{}) *iimport {
 	i.items.append(LineComment(content, args...))
 	return i
 }
