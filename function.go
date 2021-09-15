@@ -13,8 +13,18 @@ type ifunction struct {
 
 // Function represent both method and function in Go.
 //
-// If receiver is nil, we will generate like a pure function.
-// Or, we will generate a method.
+// NOTES
+//
+// If `WithReceiver`, we will generate a method:
+//    func (t test) Test()
+//
+// If `WithCall`, we will generate a function call:
+//    func Test(){}()
+//
+// If `AddBody`, we will generate like a function definition without body:
+//    func Test() {
+//        println("Hello, World!")
+//    }
 func Function(name string) *ifunction {
 	i := &ifunction{
 		name:       name,
@@ -56,11 +66,16 @@ func (i *ifunction) render(w io.Writer) {
 	// Render results
 	i.results.render(w)
 
-	// Render body
-	i.body.render(w)
+	// Only render body while there is a body or a call.
+	//
+	// This will add extra burden for functions that have empty body.
+	// But it's a rare case, and we can always add an empty line in body to workaround.
+	if i.body.length() > 0 || i.call != nil {
+		i.body.render(w)
+	}
 
+	// Only render function call while there is a call.
 	if i.call != nil {
-		// Render call
 		i.call.render(w)
 	}
 }

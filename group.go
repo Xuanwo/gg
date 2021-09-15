@@ -116,6 +116,16 @@ func (g *group) AddString(content string, args ...interface{}) *group {
 	return g
 }
 
+func (g *group) AddType(name string, typ interface{}) *group {
+	g.append(Type(name, typ))
+	return g
+}
+
+func (g *group) AddTypeAlias(name string, typ interface{}) *group {
+	g.append(TypeAlias(name, typ))
+	return g
+}
+
 func (g *group) NewImport() *iimport {
 	i := Import()
 	g.append(i)

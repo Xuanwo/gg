@@ -7,7 +7,7 @@ func TestFunction(t *testing.T) {
 		buf := pool.Get()
 		defer buf.Free()
 
-		expected := `func Test(a int, b string) (d uint) {}`
+		expected := `func Test(a int, b string) (d uint)`
 
 		Function("Test").
 			AddParameter("a", "int").
@@ -17,7 +17,6 @@ func TestFunction(t *testing.T) {
 
 		compareAST(t, expected, buf.String())
 	})
-
 	t.Run("has receiver", func(t *testing.T) {
 		buf := pool.Get()
 		defer buf.Free()
