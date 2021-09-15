@@ -85,8 +85,8 @@ f.NewFunction("hello").
     WithReceiver("v", "*World").
     AddParameter("content", "string").
     AddParameter("times", "int").
-	AddResult("v", "string").
-	AddBody(gg.String(`return fmt.Sprintf("say %s in %d times", content, times)`))
+    AddResult("v", "string").
+    AddBody(gg.String(`return fmt.Sprintf("say %s in %d times", content, times)`))
 // func (v *World) hello(content string, times int) (v string) {
 //  return fmt.Sprintf("say %s in %d times", content, times)
 //}
@@ -97,8 +97,8 @@ f.NewFunction("hello").
 ```go
 f := Group()
 f.NewStruct("World").
-	AddField("x", "int64").
-	AddField("y", "string")
+    AddField("x", "int64").
+    AddField("y", "string")
 // type World struct {
 //    x int64
 //    y string
