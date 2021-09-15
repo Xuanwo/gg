@@ -17,10 +17,11 @@ import (
 )
 
 func main() {
-	f := Group()
-	f.Package("main")
-	f.Imports().Path("fmt")
-	f.Function("main").Body(
+	f := NewGroup()
+	f.AddPackage("main")
+	f.NewImport().
+		AddPath("fmt")
+	f.NewFunction("main").AddBody(
 		String(`fmt.Println("%s")`, "Hello, World!"),
 	)
 	fmt.Println(f.String())
@@ -55,7 +56,7 @@ In short, `gg` will provide near-native golang syntax and helpful API so play a 
 
 ```go
 f := Group()
-f.Package("main")
+f.AddPackage("main")
 // package main
 ```
 
@@ -63,11 +64,11 @@ f.Package("main")
 
 ```go
 f := Group()
-f.Imports().
-    Path("context").
-	Dot("math").
-	Blank("time").
-	Alias("x", "testing")
+f.NewImport().
+    AddPath("context").
+	AddDot("math").
+	AddBlank("time").
+	AddAlias("x", "testing")
 // import (
 //      "context"
 //      . "math"
@@ -80,12 +81,12 @@ f.Imports().
 
 ```go
 f := Group()
-f.Function("hello").
-    Receiver("v", "*World").
-    Parameter("content", "string").
-    Parameter("times", "int").
-	Result("v", "string").
-	Body(gg.String(`return fmt.Sprintf("say %s in %d times", content, times)`))
+f.NewFunction("hello").
+    WithReceiver("v", "*World").
+    AddParameter("content", "string").
+    AddParameter("times", "int").
+	AddResult("v", "string").
+	AddBody(gg.String(`return fmt.Sprintf("say %s in %d times", content, times)`))
 // func (v *World) hello(content string, times int) (v string) {
 //  return fmt.Sprintf("say %s in %d times", content, times)
 //}
@@ -95,9 +96,9 @@ f.Function("hello").
 
 ```go
 f := Group()
-f.Struct("World").
-	Field("x", "int64").
-	Field("y", "string")
+f.NewStruct("World").
+	AddField("x", "int64").
+	AddField("y", "string")
 // type World struct {
 //    x int64
 //    y string
