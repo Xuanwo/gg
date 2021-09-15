@@ -111,6 +111,11 @@ func (g *group) AddLine() *group {
 	return g
 }
 
+func (g *group) AddString(content string, args ...interface{}) *group {
+	g.append(S(content, args...))
+	return g
+}
+
 func (g *group) NewImport() *iimport {
 	i := Import()
 	g.append(i)
