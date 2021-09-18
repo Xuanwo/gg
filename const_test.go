@@ -48,4 +48,22 @@ Description="Hello, World!"
 
 		compareAST(t, expected, buf.String())
 	})
+
+	t.Run("line comment", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `const (
+// Version is the version
+Version=2
+)
+`
+
+		Const().
+			AddLineComment("Version is the version").
+			AddField("Version", Lit(2)).
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
 }

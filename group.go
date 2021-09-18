@@ -132,19 +132,19 @@ func (g *group) NewImport() *iimport {
 	return i
 }
 
-func (g *group) NewIf(judge Node) *iif {
+func (g *group) NewIf(judge interface{}) *iif {
 	i := If(judge)
 	g.append(i)
 	return i
 }
 
-func (g *group) NewFor(judge Node) *ifor {
+func (g *group) NewFor(judge interface{}) *ifor {
 	i := For(judge)
 	g.append(i)
 	return i
 }
 
-func (g *group) NewSwitch(judge Node) *iswitch {
+func (g *group) NewSwitch(judge interface{}) *iswitch {
 	i := Switch(judge)
 	g.append(i)
 	return i

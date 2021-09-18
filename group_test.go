@@ -136,3 +136,50 @@ func main() {
 
 	fmt.Println(b.String())
 }
+
+func TestGroup(t *testing.T) {
+	buf := pool.Get()
+	defer buf.Free()
+
+	expected := `import "math"
+
+// test line comment
+// test add string
+
+type Test string
+type Alias = string
+
+if true {}
+for true {}
+switch true {}
+var name = 123
+const name = 123
+
+func test() {
+}
+
+type test struct {}
+type test interface {}
+`
+
+	g := NewGroup()
+	g.NewImport().AddPath("math")
+
+	g.AddLineComment("test line comment")
+	g.AddLine()
+	g.AddString("// test add string")
+	g.AddType("Test", "string")
+	g.AddTypeAlias("Alias", "string")
+	g.NewIf("true")
+	g.NewFor("true")
+	g.NewSwitch("true")
+	g.NewVar().AddField("name", "123")
+	g.NewConst().AddField("name", "123")
+	g.NewFunction("test").AddBody(Line())
+	g.NewStruct("test")
+	g.NewInterface("test")
+
+	g.render(buf)
+
+	compareAST(t, expected, buf.String())
+}

@@ -9,16 +9,20 @@ func TestImports(t *testing.T) {
 	defer buf.Free()
 
 	expected := `import (
+// test
 "context"
 . "time"
 _ "math"
+
 test "testing"
 )
 `
 	Import().
+		AddLineComment("test").
 		AddPath("context").
 		AddDot("time").
 		AddBlank("math").
+		AddLine().
 		AddAlias("testing", "test").
 		render(buf)
 

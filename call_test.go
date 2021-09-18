@@ -28,6 +28,10 @@ func TestCalls(t *testing.T) {
 		compareAST(t, expected, buf.String())
 	})
 
+	t.Run("panic while owner is not nil", func(t *testing.T) {
+
+	})
+
 	t.Run("call list", func(t *testing.T) {
 		buf := pool.Get()
 		defer buf.Free()

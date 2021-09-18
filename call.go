@@ -1,7 +1,6 @@
 package gg
 
 import (
-	"fmt"
 	"io"
 )
 
@@ -36,9 +35,6 @@ func (i *icall) render(w io.Writer) {
 }
 
 func (i *icall) WithOwner(name string) *icall {
-	if i.owner != nil {
-		panic(fmt.Errorf("icall already have owner %v", i.owner))
-	}
 	i.owner = String(name)
 	return i
 }

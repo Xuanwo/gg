@@ -31,7 +31,7 @@ func (i *iconst) AddTypedField(name, typ, value interface{}) *iconst {
 	return i
 }
 
-func (i *iconst) AddLineComment(value interface{}) *iconst {
-	i.items.append(value)
+func (i *iconst) AddLineComment(content string, args ...interface{}) *iconst {
+	i.items.append(LineComment(content, args...))
 	return i
 }

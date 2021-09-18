@@ -7,9 +7,9 @@ type iif struct {
 	body  *group
 }
 
-func If(judge Node) *iif {
+func If(judge interface{}) *iif {
 	return &iif{
-		judge: judge,
+		judge: parseNode(judge),
 		body:  newGroup("{\n", "\n}", "\n"),
 	}
 }
@@ -35,9 +35,9 @@ func (i *ifor) render(w io.Writer) {
 	i.body.render(w)
 }
 
-func For(judge Node) *ifor {
+func For(judge interface{}) *ifor {
 	return &ifor{
-		judge: judge,
+		judge: parseNode(judge),
 		body:  newGroup("{\n", "\n}", "\n"),
 	}
 }
@@ -89,9 +89,9 @@ func (i *iswitch) render(w io.Writer) {
 	writeString(w, "}")
 }
 
-func Switch(judge Node) *iswitch {
+func Switch(judge interface{}) *iswitch {
 	return &iswitch{
-		judge: judge,
+		judge: parseNode(judge),
 	}
 }
 func (i *iswitch) NewCase(judge Node) *icase {
