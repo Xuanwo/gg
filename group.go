@@ -66,10 +66,12 @@ func (g *group) render(w io.Writer) {
 	}
 }
 
+// Deprecated: use `Generator.Write(w)` instead.
 func (g *group) Write(w io.Writer) {
 	g.render(w)
 }
 
+// Deprecated: use `Generator.WriteFile(w)` instead.
 func (g *group) WriteFile(path string) error {
 	file, err := os.Create(path)
 	if err != nil {
@@ -79,6 +81,7 @@ func (g *group) WriteFile(path string) error {
 	return nil
 }
 
+// Deprecated: use `Generator.AppendFile(w)` instead.
 func (g *group) AppendFile(path string) error {
 	file, err := os.OpenFile(path, os.O_APPEND|os.O_RDWR, 0644)
 	if err != nil {
