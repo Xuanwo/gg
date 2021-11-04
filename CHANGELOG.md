@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v0.3.0] - 2021-11-04
+
+### Added
+
+- Increase test coverage
+- feat: Add Generator as exported type (#10)
+
 ## [v0.2.0] - 2021-09-15
 
 ### Added
@@ -62,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Implement basic functions
 - feat: Add omit wrap support
 
+[v0.3.0]: https://github.com/Xuanwo/gg/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/Xuanwo/gg/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/Xuanwo/gg/compare/v0.0.2...v0.1.0
 [v0.0.2]: https://github.com/Xuanwo/gg/compare/v0.0.1...v0.0.2
