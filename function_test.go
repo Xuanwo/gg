@@ -69,4 +69,66 @@ return "Hello, World!"
 
 		compareAST(t, expected, buf.String())
 	})
+
+	t.Run("no name result - no receiver - single result", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `func Test(a int) (int)`
+
+		Function("Test").
+			AddParameter("a", "int").
+			AddResult("", "int").
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
+
+	t.Run("no name result - no receiver - multi result", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `func Test(a int) (int, string, error)`
+
+		Function("Test").
+			AddParameter("a", "int").
+			AddResult("", "int").
+			AddResult("", "string").
+			AddResult("", "error").
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
+
+	t.Run("no name result - has receiver - single result", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `func (r *Q) Test(a int) (int)`
+
+		Function("Test").
+			WithReceiver("r", "*Q").
+			AddParameter("a", "int").
+			AddResult("", "int").
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
+
+	t.Run("no name result - has receiver - multi result", func(t *testing.T) {
+		buf := pool.Get()
+		defer buf.Free()
+
+		expected := `func (r *Q) Test(a int) (int, string, error)`
+
+		Function("Test").
+			WithReceiver("r", "*Q").
+			AddParameter("a", "int").
+			AddResult("", "int").
+			AddResult("", "string").
+			AddResult("", "error").
+			render(buf)
+
+		compareAST(t, expected, buf.String())
+	})
 }
